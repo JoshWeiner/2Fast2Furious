@@ -27,8 +27,8 @@ def defProtocol(inputTxt):
 	categs = os.listdir("./Inputs")
 	categNames = list()
 	for file in categs:
-		print os.path.basename(file.name) + "\n"
-		categNames.append(os.path.basename(file.name))
+		print os.path.basename(file) + "\n"
+		categNames.append(os.path.basename(file))
 	category = raw_input()
 
 	inputFile = open("./Inputs/" + category, "a+")
