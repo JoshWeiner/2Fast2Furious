@@ -16,7 +16,7 @@ def compTxt(inputTxt):
 	for file in inputs:
 		readInputFile = open("./Inputs/" + file, "r").read().split("\n")
 		if inputTxt in readInputFile:
-			if file != "farewell":
+			if file != "farewell" or file != "politeFarewell":
 				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
 				return random.choice(readOutputFile)
 			else:
@@ -29,22 +29,21 @@ def defProtocol(inputTxt):
 	print "I don't quite understand yet. How should I respond to this?\n"
 	response = raw_input()
 
-	print "\nWhat category does this belong in?"
+	print "\nWhat category does this belong in?\n"
 	categs = os.listdir("./Inputs")
 	categNames = list()
 	for file in categs:
-		print os.path.basename(file) + "\n"
+		print os.path.basename(file)
 		categNames.append(os.path.basename(file))
+	print ""
 	category = raw_input()
 
-	inputFile = open("./Inputs/" + category, "a+")
-	inputFile.append(inputTxt)
-	inputFile.close()
+	with open("./Inputs/" + category, "a+") as inputFile:
+		inputFile.write(inputTxt)
 
-	outputFile = open("./Outputs/" + category, "a+")
-	inputFile.append(response)
-	outputFile.close()
+	with open("./Outputs/" + category, "a+") as outputFile:
+		outputFile.write(response)
 
-	print "Thanks for improving me!"
+	print "\nThanks for improving me!\n"
 
 printSys()
