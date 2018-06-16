@@ -2,6 +2,7 @@ import os
 import signal
 import random
 import time
+import sys
 
 def printSys():
 	userIn = raw_input()
@@ -15,8 +16,13 @@ def compTxt(inputTxt):
 	for file in inputs:
 		readInputFile = open("./Inputs/" + file, "r").read().split("\n")
 		if inputTxt in readInputFile:
-			readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
-			return random.choice(readOutputFile)
+			if file != "farewell":
+				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
+				return random.choice(readOutputFile)
+			else:
+				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
+				print random.choice(readOutputFile)
+				sys.exit()
 	defProtocol(inputTxt)
 
 def defProtocol(inputTxt):
@@ -32,11 +38,11 @@ def defProtocol(inputTxt):
 	category = raw_input()
 
 	inputFile = open("./Inputs/" + category, "a+")
-	write(inputTxt)
+	inputFile.append(inputTxt)
 	inputFile.close()
 
 	outputFile = open("./Outputs/" + category, "a+")
-	write(response)
+	inputFile.append(response)
 	outputFile.close()
 
 	print "Thanks for improving me!"
