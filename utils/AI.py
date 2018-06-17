@@ -127,17 +127,17 @@ def crisis(inputTxt):
 		inCrisis = False
 		whatMatter = False
 		if "assault" in newTxt:
-			return "Here are some locations near you that can help with assault:<br>\
+			return 'Here are some locations near you that can help with assault:<br>\
 			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/5th-precinct.page">5th Precinct - 19 Elizabeth St</a><br>\
 			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/1st-precinct.page">1st Precinct - 16 Ericsson Pl</a><br>\
-			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/9th-precinct.page">9th Precinct - 321 E 5th St</a>"
+			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/9th-precinct.page">9th Precinct - 321 E 5th St</a>'
 		elif "fire" in newTxt:
 			return "Here are the locations of the nearest fire departments:<br>\
 			Ladder 8 - 14 N Moore St<br>\
 			Battalion 1 - 100 Duane St<br>\
 			Battalion 2 - 363 Broome St<br>"
 		elif "sick" in newTxt:
-			return "Here are the locations of the nearest medical care facilities:<br>\
+			return 'Here are the locations of the nearest medical care facilities:<br>\
 			<a href="https://www.nyp.org/lowermanhattan">New York Presbytarian Hospital - 170 William St</a><br>\
 			<a href="https://www.nychealthandhospitals.org/health_care/?doctor=&specialty=&filter_location=39346&condition=1">NYC Health and Hospitals - 227 Madison St</a><br>\
-			<a href="https://nyulangone.org/locations/nyu-langone-medical-associates-canal-street">NYU Langone - 196 Canal St</a>"
+			<a href="https://nyulangone.org/locations/nyu-langone-medical-associates-canal-street">NYU Langone - 196 Canal St</a>'
