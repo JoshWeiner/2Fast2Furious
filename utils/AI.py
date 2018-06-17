@@ -120,6 +120,9 @@ def crisis(inputTxt):
 	global inCrisis
 	global whatMatter
 	newTxt = inputTxt.lower()
+	#This is used to get the user location
+	ipaddress = getIPaddress()
+	setPlace  = ipaddress
 	if whatMatter == False:
 		whatMatter = True
 		return "Please tell me what is the issue"
@@ -141,3 +144,11 @@ def crisis(inputTxt):
 			<a href="https://www.nyp.org/lowermanhattan">New York Presbytarian Hospital - 170 William St</a><br>\
 			<a href="https://www.nychealthandhospitals.org/health_care/?doctor=&specialty=&filter_location=39346&condition=1">NYC Health and Hospitals - 227 Madison St</a><br>\
 			<a href="https://nyulangone.org/locations/nyu-langone-medical-associates-canal-street">NYU Langone - 196 Canal St</a>'
+
+def getIPaddress():
+	#The ip address of Gekko
+	parameters = "103.201.231.145"
+	#Use the place API for google to get nearlocation
+	response = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/output?input=parameters")
+	parameters = response.getLocation()
+	return "geoLocation"
