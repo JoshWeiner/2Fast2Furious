@@ -16,13 +16,13 @@ def compTxt(inputTxt):
 	for file in inputs:
 		readInputFile = open("./Inputs/" + file, "r").read().split("\n")
 		if inputTxt in readInputFile:
-			if file != "farewell" or file != "politeFarewell":
-				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
-				return random.choice(readOutputFile)
-			else:
+			if file == "farewell" or file == "politeFarewell":
 				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
 				print random.choice(readOutputFile)
 				sys.exit()
+			else:
+				readOutputFile = open("./Outputs/" + os.path.basename(file), "r").read().split("\n")
+				return random.choice(readOutputFile)
 	defProtocol(inputTxt)
 
 def defProtocol(inputTxt):
