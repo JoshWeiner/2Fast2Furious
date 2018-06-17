@@ -22,15 +22,18 @@ def compTxt(inputTxt):
 	global addTo
 	inputs = os.listdir("./static/Inputs")
 	for file in inputs:
-		readInputFile = open("./static/Inputs/" + file, "r").read().split("\n")
-		if inputTxt in readInputFile:
-			if file != "farewell":
-				readOutputFile = open("./static/Outputs/" + os.path.basename(file), "r").read().split("\n")
-				return(random.choice(readOutputFile))
-			else:
-				readOutputFile = open("./static/Outputs/" + os.path.basename(file), "r").read().split("\n")
-				return random.choice(readOutputFile)
-			sys.exit()
+		readInputFile = open("./static/Inputs/" + file, "r").readlines()
+		newStr = inputTxt.split(" ")
+		for word in newStr:
+			if (len(word) > 4) and word in readInputFile:
+				print("BOOL")
+				if file != "farewell":
+					readOutputFile = open("./static/Outputs/" + os.path.basename(file), "r").read().split("\n")
+					return(random.choice(readOutputFile))
+				else:
+					readOutputFile = open("./static/Outputs/" + os.path.basename(file), "r").read().split("\n")
+					return random.choice(readOutputFile)
+				sys.exit()
 	addTo = True;
 	return defProtocol(inputTxt)
 
