@@ -9,11 +9,21 @@ addTo = False
 listedOptions = False
 addResp = False
 improvingAI = False
+inCrisis = False
+whatMatter = False
+sendLocation = False
 storeStr = ""
 storeFilepath = ""
 
 def printSys(inputTxt):
-	if improvingAI == False:
+	global inCrisis
+	global sendLocation
+	global whatMatter
+	global improvingAI
+	print inCrisis
+	if inCrisis:
+		return crisis(inputTxt)
+	elif improvingAI == False:
 		if inputTxt != "--q--":
 			return compTxt(inputTxt)
 		else:
@@ -26,36 +36,43 @@ def compTxt(inputTxt):
 	global addResp
 	global listedOptions
 	global improvingAI
+	global inCrisis
 	newTxt = inputTxt.lower()
-	inputs = os.listdir("./static/Inputs")
-	for file in inputs:
-		filepath = "./static/Inputs/" + file
-		readInputFile = open(filepath, "r")
-		r = readInputFile.readlines()
-		for line in r:
-			newLine = line.lower()
-			if newTxt in newLine:
-					categs = os.listdir("./static/Outputs")
-					if file in categs:
-						if file != "farewell":
-							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-							retStr = random.choice(readOutputFile)
-							if retStr != "ignoreOutput":
-								return retStr
+	if ("i'm in trouble.".find(newTxt) != -1) or ("please help me.".find(newTxt) != -1) or ("i need help.".find(newTxt) != -1):
+		inCrisis = True
+		return crisis(inputTxt)
+	elif whatMatter == True:
+		return crisis(inputTxt)
+	else:
+		inputs = os.listdir("./static/Inputs")
+		for file in inputs:
+			filepath = "./static/Inputs/" + file
+			readInputFile = open(filepath, "r")
+			r = readInputFile.readlines()
+			for line in r:
+				newLine = line.lower()
+				if newTxt in newLine:
+						categs = os.listdir("./static/Outputs")
+						if file in categs:
+							if file != "farewell":
+								readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
+								retStr = random.choice(readOutputFile)
+								if retStr != "ignoreOutput":
+									return retStr
+							else:
+								readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
+								retStr = random.choice(readOutputFile)
+								if retStr != "ignoreOutput":
+									return retStr
 						else:
-							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-							retStr = random.choice(readOutputFile)
-							if retStr != "ignoreOutput":
-								return retStr
-					else:
-						addTo = True
-						addResp = False
-						listedOptions = True
-						improvingAI = True
-						return defProtocol(file)
-	addTo = True;
-	improvingAI = True;
-	return defProtocol(inputTxt)
+							addTo = True
+							addResp = False
+							listedOptions = True
+							improvingAI = True
+							return defProtocol(file)
+		addTo = True;
+		improvingAI = True;
+		return defProtocol(inputTxt)
 
 def defProtocol(inputTxt):
 	global addTo
@@ -78,7 +95,6 @@ def defProtocol(inputTxt):
 			listedOptions = True
 			addResp = False
 		elif addResp == True:
-			print("BOOOLL")
 			outputFile = open("./static/Outputs/" + storeFilepath , "a+")
 			if len(inputTxt) > 1:
 				outputFile.write(inputTxt + "\n")
@@ -99,3 +115,20 @@ def defProtocol(inputTxt):
 		return retStr
 
 #printSys()
+
+def crisis(inputTxt):
+	global inCrisis
+	global whatMatter
+	newTxt = inputTxt.lower()
+	if whatMatter == False:
+		whatMatter = True
+		return "Please tell me what is the issue"
+	elif whatMatter == True:
+		inCrisis = False
+		whatMatter = False
+		if "assault" in newTxt:
+			return "Here are some locations near you that can help with assault:"
+		elif "fire" in newTxt:
+			return "Here are the locations of the nearest fire departments:"
+		elif "sick" in newTxt:
+			return "Here are the locations of the nearest medical care facilities:"
