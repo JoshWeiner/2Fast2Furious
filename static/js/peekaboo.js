@@ -5,7 +5,7 @@ function getBotResponse() {
   //Displays user input in chatbox
   $("#chatbox").append(userHtml);
 
-  var reply = $.post("/get_js", {
+  var reply = $.POST("/get_js", {
     rawText: rawText}, function(response)
     {
       var botHtml = '<p class="botText"><span>' + response + '</span></p>';
