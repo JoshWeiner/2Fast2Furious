@@ -23,22 +23,30 @@ def printSys(inputTxt):
 
 def compTxt(inputTxt):
 	global addTo
+	global addResp
+	global listedOptions
+	global improvingAI
+	newTxt = inputTxt.lower()
 	inputs = os.listdir("./static/Inputs")
 	for file in inputs:
 		filepath = "./static/Inputs/" + file
 		readInputFile = open(filepath, "r")
 		r = readInputFile.readlines()
 		for line in r:
-				if inputTxt in line:
-					print filepath
+			newLine = line.lower()
+			if newTxt in newLine:
 					categs = os.listdir("./static/Outputs")
 					if file in categs:
 						if file != "farewell":
 							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-							return(random.choice(readOutputFile))
+							retStr = random.choice(readOutputFile)
+							if retStr != "ignoreOutput":
+								return retStr
 						else:
 							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-							return random.choice(readOutputFile)
+							retStr = random.choice(readOutputFile)
+							if retStr != "ignoreOutput":
+								return retStr
 					else:
 						addTo = True
 						addResp = False
@@ -46,6 +54,7 @@ def compTxt(inputTxt):
 						improvingAI = True
 						return defProtocol(file)
 	addTo = True;
+	improvingAI = True;
 	return defProtocol(inputTxt)
 
 def defProtocol(inputTxt):
@@ -71,7 +80,7 @@ def defProtocol(inputTxt):
 		elif addResp == True:
 			print("BOOOLL")
 			outputFile = open("./static/Outputs/" + storeFilepath , "a+")
-			if len(storeStr > 1):
+			if len(inputTxt) > 1:
 				outputFile.write(inputTxt + "\n")
 			outputFile.close()
 			retStr += "Thank you for the input!"
