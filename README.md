@@ -35,5 +35,5 @@ This was our first experience learning javascript (in addition to it being our f
 <li> Finally, we learned that taking the time to teach a program colloquial speech is a long and arduous process. </li> </ul>
 
 **Our instructions are as follows:** <ul>
-  <li>**Type away**</li>
-  <li>**...and enjoy!**</li>
+  <li>Type away</li>
+  <li>...and enjoy!</li>
