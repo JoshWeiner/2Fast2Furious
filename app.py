@@ -9,9 +9,11 @@ def home():
 
 @app.route("/get_js", methods = ["POST", "GET"])
 def get_js():
-    data = request.form['rawText']
-    newData = ai.compTxt(data)
-    return newData
+    if request.method == "POST":
+        data = request.form['rawText']
+        newData = ai.printSys(data)
+        return newData
+    return render_template('index.html')
 
 @app.route("/get_bot")
 def get_bot_response():
