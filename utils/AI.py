@@ -8,11 +8,12 @@ import cgi
 addTo = False
 listedOptions = False
 addResp = False
+improvingAI = False
 storeStr = ""
 storeFilepath = ""
 
 def printSys(inputTxt):
-	if listedOptions == False:
+	if improvingAI == False:
 		if inputTxt != "--q--":
 			return compTxt(inputTxt)
 		else:
@@ -27,10 +28,9 @@ def compTxt(inputTxt):
 		filepath = "./static/Inputs/" + file
 		readInputFile = open(filepath, "r")
 		r = readInputFile.readlines()
-		newStr = inputTxt.split(" ")
 		for line in r:
-			for word in newStr:
-				if word in line and len(word) > 3:
+				if inputTxt in line:
+					print filepath
 					categs = os.listdir("./static/Outputs")
 					if file in categs:
 						if file != "farewell":
@@ -39,7 +39,12 @@ def compTxt(inputTxt):
 						else:
 							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
 							return random.choice(readOutputFile)
-						sys.exit()
+					else:
+						addTo = True
+						addResp = False
+						listedOptions = True
+						improvingAI = True
+						return defProtocol(file)
 	addTo = True;
 	return defProtocol(inputTxt)
 
@@ -51,6 +56,7 @@ def defProtocol(inputTxt):
 	global storeFilepath
 	retStr = ""
 	if addTo == True:
+		improvingAI = True
 		if listedOptions == False:
 			storeStr = inputTxt
 			retStr += "I don't quite understand yet. How should I respond to this? <br> \n"
@@ -61,22 +67,26 @@ def defProtocol(inputTxt):
 				retStr += os.path.basename(file) + "<br>\n"
 				categNames.append(os.path.basename(file))
 			listedOptions = True
+			addResp = False
+		elif addResp == True:
+			print("BOOOLL")
+			outputFile = open("./static/Outputs/" + storeFilepath , "a+")
+			if len(storeStr > 1):
+				outputFile.write(inputTxt + "\n")
+			outputFile.close()
+			retStr += "Thank you for the input!"
+			listedOptions = False
+			addTo = False
+			addResp = False
+			improvingAI = False
 		else:
-			if addResp == True:
-				outputFile = open("./static/Outputs/" + storeFilepath , "a+")
-				outputFile.write("\n" + inputTxt)
-				outputFile.close()
-				retStr += "Thank you for the input!"
-				listedOptions = False
-				addTo = False
-				addResp = False
-			else:
-				storeFilepath = inputTxt
-				inputFile = open("./static/Inputs/" + storeFilepath , "a+")
-				inputFile.write("\n" + storeStr)
-				inputFile.close()
-		 		retStr += "Please let me know how I should respond to that."
-				addResp = True
+			storeFilepath = inputTxt
+			inputFile = open("./static/Inputs/" + storeFilepath , "a+")
+			inputFile.write(storeStr + "\n")
+			inputFile.close()
+		 	retStr += "Please let me know how I should respond to that."
+			addResp = True
+			listedOptions = True
 		return retStr
 
 #printSys()
