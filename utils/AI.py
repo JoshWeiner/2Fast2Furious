@@ -4,6 +4,7 @@ import random
 import time
 import sys
 import cgi
+import io
 
 addTo = False
 listedOptions = False
@@ -14,30 +15,38 @@ whatMatter = False
 sendLocation = False
 storeStr = ""
 storeFilepath = ""
+userName = ""
+namePrime = False
+knowName = False
 
 def printSys(inputTxt):
 	global inCrisis
 	global sendLocation
 	global whatMatter
 	global improvingAI
-	print inCrisis
 	if inCrisis:
 		return crisis(inputTxt)
+	elif improvingAI:
+		return defProtocol(inputTxt)
 	elif improvingAI == False:
 		if inputTxt != "--q--":
 			return compTxt(inputTxt)
 		else:
 			return("Program quit ... all processes completed and saved")
-	else:
-		return defProtocol(inputTxt)
 
 def compTxt(inputTxt):
 	global addTo
 	global addResp
 	global listedOptions
 	global improvingAI
+	global whatMatter
 	global inCrisis
+	global namePrime
+	global userName
+	global knowName
 	newTxt = inputTxt.lower()
+	if "my name" in newTxt and len(userName) < 1:
+		namePrime = True
 	if ("i'm in trouble.".find(newTxt) != -1) or ("please help me.".find(newTxt) != -1) or ("i need help.".find(newTxt) != -1):
 		inCrisis = True
 		return crisis(inputTxt)
@@ -47,29 +56,40 @@ def compTxt(inputTxt):
 		inputs = os.listdir("./static/Inputs")
 		for file in inputs:
 			filepath = "./static/Inputs/" + file
-			readInputFile = open(filepath, "r")
+			readInputFile = io.open(filepath, "r", encoding='cp1252')
 			r = readInputFile.readlines()
 			for line in r:
 				newLine = line.lower()
-				if newTxt in newLine:
-						categs = os.listdir("./static/Outputs")
-						if file in categs:
-							if file != "farewell":
-								readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-								retStr = random.choice(readOutputFile)
-								if retStr != "ignoreOutput":
-									return retStr
-							else:
-								readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
-								retStr = random.choice(readOutputFile)
-								if retStr != "ignoreOutput":
-									return retStr
-						else:
-							addTo = True
-							addResp = False
-							listedOptions = True
-							improvingAI = True
-							return defProtocol(file)
+				if namePrime:
+					userTxt = inputTxt.split(" ")
+					for word in userTxt:
+						if "what" in inputTxt.lower() and knowName == False:
+							namePrime = True
+							return "I don't know yet! What is your name?"
+						if word.lower() != "my" and word.lower() != "name" and word.lower() != "is" and knowName == False:
+							userName += word + " "
+							knowName = True
+						namePrime = False
+					if len(userName) > 1:
+						return "Nice to meet you, " + userName
+				elif newTxt in unicode(newLine) or unicode(newLine) in newTxt:
+					categs = os.listdir("./static/Outputs")
+					if file == "userNameQuery":
+						return "Your name is " + userName
+					elif file in categs:
+						if file != "farewell":
+							readOutputFile = open("./static/Outputs/" + file, "r").read().split("\n")
+							retStr = random.choice(readOutputFile)
+							if "your name" in retStr.lower():
+								namePrime = True
+							if retStr != "ignoreOutput":
+								return retStr
+					else:
+						addTo = True
+						addResp = False
+						listedOptions = True
+						improvingAI = True
+						return defProtocol(file)
 		addTo = True;
 		improvingAI = True;
 		return defProtocol(inputTxt)
@@ -92,12 +112,12 @@ def defProtocol(inputTxt):
 			for file in categs:
 				retStr += os.path.basename(file) + "<br>\n"
 				categNames.append(os.path.basename(file))
-			listedOptions = True
-			addResp = False
+				listedOptions = True
+				addResp = False
 		elif addResp == True:
 			outputFile = open("./static/Outputs/" + storeFilepath , "a+")
-			if len(inputTxt) > 1:
-				outputFile.write(inputTxt + "\n")
+			if inputTxt != ">":
+				outputFile.write("\n" + inputTxt)
 			outputFile.close()
 			retStr += "Thank you for the input!"
 			listedOptions = False
@@ -107,29 +127,33 @@ def defProtocol(inputTxt):
 		else:
 			storeFilepath = inputTxt
 			inputFile = open("./static/Inputs/" + storeFilepath , "a+")
-			inputFile.write(storeStr + "\n")
+			inputFile.write("\n"+ storeStr)
 			inputFile.close()
-		 	retStr += "Please let me know how I should respond to that."
+			retStr += "Please let me know how I should respond to that."
+			addTo = True
 			addResp = True
 			listedOptions = True
+			improvingAI = True
 		return retStr
 
-#printSys()
+					#printSys()
 
 def crisis(inputTxt):
 	global inCrisis
 	global whatMatter
 	newTxt = inputTxt.lower()
 	#This is used to get the user location
-	ipaddress = getIPaddress()
-	setPlace  = ipaddress
+	#ipaddress = getIPaddress()
+	#setPlace  = ipaddress
 	if whatMatter == False:
 		whatMatter = True
 		return "Please tell me what is the issue"
 	elif whatMatter == True:
 		inCrisis = False
 		whatMatter = False
-		if "assault" in newTxt:
+		if "no issue" in newTxt or "nothing" in newTxt:
+			return "Gotcha, let me know if you need me for something else"
+		elif "assault" in newTxt:
 			return 'Here are some locations near you that can help with assault:<br>\
 			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/5th-precinct.page">5th Precinct - 19 Elizabeth St</a><br>\
 			<a href="http://www1.nyc.gov/site/nypd/bureaus/patrol/precincts/1st-precinct.page">1st Precinct - 16 Ericsson Pl</a><br>\
@@ -145,10 +169,10 @@ def crisis(inputTxt):
 			<a href="https://www.nychealthandhospitals.org/health_care/?doctor=&specialty=&filter_location=39346&condition=1">NYC Health and Hospitals - 227 Madison St</a><br>\
 			<a href="https://nyulangone.org/locations/nyu-langone-medical-associates-canal-street">NYU Langone - 196 Canal St</a>'
 
-def getIPaddress():
-	#The ip address of Gekko
-	parameters = "103.201.231.145"
-	#Use the place API for google to get nearlocation
-	response = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/output?input=parameters")
-	parameters = response.getLocation()
-	return "geoLocation"
+'''def getIPaddress():
+#The ip address of Gekko
+parameters = "103.201.231.145"
+#Use the place API for google to get nearlocation
+response = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/output?input=parameters")
+parameters = response.getLocation()
+return "geoLocation"'''
