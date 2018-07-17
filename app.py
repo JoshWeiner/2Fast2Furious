@@ -11,7 +11,6 @@ def home():
 def get_js():
     data = request.form['rawText']
     newData = ai.compTxt(data)
-    print newData
     return newData
 
 @app.route("/get_bot", methods = ["POST", "GET"])
